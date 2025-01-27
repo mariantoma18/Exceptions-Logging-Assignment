@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class StudentManager {
@@ -60,6 +61,9 @@ public class StudentManager {
         dateOfBirth = getDateOfBirthFromUser();
       } catch (IllegalArgumentException e) {
         System.out.println("Invalid date of birth: " + e.getMessage());
+      } catch (InputMismatchException v) {
+        System.out.println("The input must be a number!");
+        scanner.nextLine();
       }
     }
 
