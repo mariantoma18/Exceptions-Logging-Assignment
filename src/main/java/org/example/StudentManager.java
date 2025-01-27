@@ -7,6 +7,9 @@ import java.util.Scanner;
 public class StudentManager {
   Scanner scanner = new Scanner(System.in);
 
+  /*
+  Initialize the list of students
+   */
   public ArrayList<Student> initializeStudentList() {
     ArrayList<Student> students = new ArrayList<>();
 
@@ -19,148 +22,165 @@ public class StudentManager {
     return students;
   }
 
-  public void addStudent(ArrayList<Student> students) {
-    Student builtStudent = buildStudent();
+  /*
+  Add a student to the student list, using the buildStudent method
+   */
+  public void addStudent(ArrayList<Student> students, Student builtStudent) {
 
     students.add(builtStudent);
   }
 
+  /*
+  A method that builds student based on the inputs
+   */
   public Student buildStudent() {
-    String firstName = getFirstNameFromUser();
-    String lastName = getLastNameFromUser();
-    int dateOfBirth = getDateOfBirthFromUser();
-    String gender = getGenderFromUser();
+    String firstName = null;
+    String lastName = null;
+    int dateOfBirth = 0;
+    String gender = null;
+
+    while (firstName == null) {
+      try {
+        firstName = getFirstNameFromUser();
+      } catch (NullPointerException e) {
+        System.out.println("Error: " + e.getMessage());
+      }
+    }
+
+    while (lastName == null) {
+      try {
+        lastName = getLastNameFromUser();
+      } catch (IllegalArgumentException e) {
+        System.out.println("Error: " + e.getMessage());
+      }
+    }
+
+    while (dateOfBirth == 0) {
+      try {
+        dateOfBirth = getDateOfBirthFromUser();
+      } catch (IllegalArgumentException e) {
+        System.out.println("Invalid date of birth: " + e.getMessage());
+      }
+    }
+
+    while (gender == null) {
+      try {
+        gender = getGenderFromUser();
+      } catch (IllegalArgumentException e) {
+        System.out.println("Invalid gender: " + e.getMessage());
+      }
+    }
+
     String ID = getIdFromUser();
 
     Student student = new Student(firstName, lastName, dateOfBirth, gender, ID);
     return student;
   }
 
-  private String getGenderFromUser() {
-    String gender;
+  /*
+  Based on the user's input, return the gender
+   */
+  public String getGenderFromUser() {
+    System.out.print("Enter the student gender: ");
+    String gender = scanner.next();
 
-    try {
-      System.out.print("Enter the student gender: ");
-      gender = scanner.next();
-
-      if (!gender.equalsIgnoreCase("M") & !gender.equalsIgnoreCase("F")) {
-        throw new IllegalArgumentException("The gender must be M/F");
-      }
-
-      return gender;
-    } catch (IllegalArgumentException e) {
-      System.out.println("Error: " + e.getMessage());
+    if (!gender.equalsIgnoreCase("M") && !gender.equalsIgnoreCase("F")) {
+      throw new IllegalArgumentException("The gender must be M/F");
     }
 
-    return getGenderFromUser();
+    return gender.toUpperCase();
   }
 
-  private int getDateOfBirthFromUser() {
-    int dateOfBirth;
+  /*
+  Based on the user's input, return the date of birth
+   */
+  public int getDateOfBirthFromUser() {
+    System.out.print("Enter the student date of birth: ");
+    int dateOfBirth = scanner.nextInt();
+    scanner.nextLine();
 
-    try {
-      System.out.print("Enter the student date of birth: ");
-      dateOfBirth = scanner.nextInt();
-      scanner.nextLine();
-
-      if (dateOfBirth < 1900 | dateOfBirth > 2025) {
-        throw new IllegalArgumentException(
-            "The date of birth must be between 1900 and current year");
-      }
-
-      return dateOfBirth;
-
-    } catch (IllegalArgumentException v) {
-      System.out.println("Error: " + v.getMessage());
-    } catch (Exception e) {
-      System.out.println("Please enter a valid number");
-      scanner.nextLine();
+    if (dateOfBirth < 1900 | dateOfBirth > 2025) {
+      throw new IllegalArgumentException("The date of birth must be between 1900 and current year");
     }
 
-    return getDateOfBirthFromUser();
+    return dateOfBirth;
   }
 
+  /*
+  Based on the user's input, return the first name
+   */
   public String getFirstNameFromUser() {
-    String firstName;
+    System.out.print("Enter the student first name: ");
+    String firstName = scanner.next();
 
-    try {
-      System.out.print("Enter the student first name: ");
-      firstName = scanner.next();
-
-      if (firstName == null) {
-        throw new NullPointerException("Fields empty.");
-      }
-
-      return firstName;
-
-    } catch (NullPointerException e) {
-      System.out.println("Error: " + e.getMessage());
+    if (firstName == null) {
+      throw new NullPointerException("The field can't be empty.");
     }
 
-    return getFirstNameFromUser();
+    return firstName;
   }
 
+  /*
+  Based on the user's input, return the last name
+   */
   public String getLastNameFromUser() {
-    String lastName;
+    System.out.print("Enter the student last name: ");
+    String lastName = scanner.next();
 
-    try {
-      System.out.print("Enter the student last name: ");
-      lastName = scanner.next();
-
-      if (lastName == null) {
-        throw new NullPointerException("Fields empty.");
-      }
-
-      return lastName;
-
-    } catch (NullPointerException e) {
-      System.out.println("Error: " + e.getMessage());
+    if (lastName == null) {
+      throw new NullPointerException("The field can't be empty.");
     }
 
-    return getLastNameFromUser();
+    return lastName;
   }
 
+  /*
+  Based on the user's input, return the ID
+   */
   public String getIdFromUser() {
-    String ID;
+    System.out.print("Enter the student id: ");
+    String id = scanner.next();
 
-    try {
-      System.out.print("Enter the student ID: ");
-      ID = scanner.next();
-
-      return ID;
-    } catch (Exception e) {
-      System.out.println("Error :" + e.getMessage());
-    }
-
-    return getIdFromUser();
+    return id;
   }
 
+  /*
+  Method used to delete a student by ID
+   */
   public void deleteStudent(ArrayList<Student> students) {
-    String IdToDelete = getStudentIdToDelete(scanner);
+    String idToDeletedToDelete = getStudentIdToDelete(scanner);
 
-    try {
+    if (students == null) {
+      throw new NullPointerException("The list is null");
+    } else {
+
       for (Student student : students) {
-        if (student.getID().equals(IdToDelete)) {
+        if (student.getID().equals(idToDeletedToDelete)) {
           students.remove(student);
+          System.out.println("\nThe student has been deleted.");
           return;
-        } else {
-          System.out.println("The student doesn't exist!");
         }
       }
-    } catch (Exception e) {
-      throw new RuntimeException("The student doesn't exist!");
     }
+
+    throw new StudentNotFoundException("Student with ID: " + idToDeletedToDelete + " not found.");
   }
 
+  /*
+  Based on the user's input, return the ID that will be used to delete a student from list
+   */
   public String getStudentIdToDelete(Scanner scanner) {
     scanner = new Scanner(System.in);
 
     System.out.print("Enter the student ID to delete: ");
-    String IdToDelete = scanner.next();
+    String idToDelete = scanner.next();
 
-    return IdToDelete;
+    return idToDelete;
   }
 
+  /*
+  Based on the input, the method return an ArrayList of students with the same age
+   */
   public ArrayList<Student> retrieveAllStudentsByAge(ArrayList<Student> students) {
     ArrayList<Student> studentsWithTheSameAge = new ArrayList<>();
 
@@ -173,6 +193,9 @@ public class StudentManager {
     return studentsWithTheSameAge;
   }
 
+  /*
+  Based on the input, return the age that will be used to search in student list
+   */
   public int getStudentAge(Scanner scanner) {
     scanner = new Scanner(System.in);
 
@@ -182,10 +205,16 @@ public class StudentManager {
     return ageToSearch;
   }
 
+  /*
+  Method that calculate the age of a student
+   */
   public int calculateAge(int currentYear, int dateOfBirth) {
     return currentYear - dateOfBirth;
   }
 
+  /*
+  Method that print the student list sorted by the last name
+   */
   public void printStudentsByLastName(ArrayList<Student> studentsList) {
     studentsList.sort(Comparator.comparing(Student::getLastName));
 
@@ -195,6 +224,9 @@ public class StudentManager {
     }
   }
 
+  /*
+  Method that print the student list sorted by the date of birth
+   */
   public void printStudentsByBirthDate(ArrayList<Student> studentsList) {
     studentsList.sort(Comparator.comparing(Student::getDateOfBirth));
 

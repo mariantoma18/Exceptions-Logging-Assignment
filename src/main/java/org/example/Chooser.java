@@ -6,8 +6,15 @@ import java.util.Scanner;
 public class Chooser {
   Scanner scanner = new Scanner(System.in);
   StudentManager studentManager = new StudentManager();
+
+  /*
+  Initialize the list of students
+   */
   ArrayList<Student> students = studentManager.initializeStudentList();
 
+  /*
+  Used to choose the action to be performed
+   */
   public void chooseMainAction() {
     boolean isRunning = true;
 
@@ -24,11 +31,18 @@ public class Chooser {
 
       switch (mainAnswer) {
         case 1:
-          studentManager.addStudent(students);
+          studentManager.addStudent(students, studentManager.buildStudent());
           break;
 
         case 2:
-          studentManager.deleteStudent(students);
+          try {
+            studentManager.deleteStudent(students);
+
+          } catch (NullPointerException e) {
+            System.out.println("Error: " + e.getMessage());
+          } catch (StudentNotFoundException v) {
+            System.out.println(v.getMessage());
+          }
           break;
 
         case 3:
@@ -49,6 +63,9 @@ public class Chooser {
     }
   }
 
+  /*
+  Based on the input, choose the sorting criteria of students
+   */
   public void chooseSortingCriterion() {
     System.out.print(
         "\nBy what criteria do you want the list to be sorted?\n"
