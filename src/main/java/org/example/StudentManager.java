@@ -6,7 +6,15 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class StudentManager {
-  Scanner scanner = new Scanner(System.in);
+  Scanner scanner;
+
+  public StudentManager() {
+    this.scanner = new Scanner(System.in);
+  }
+
+  public StudentManager(Scanner scanner) {
+    this.scanner = scanner;
+  }
 
   /*
   Initialize the list of students
@@ -152,34 +160,19 @@ public class StudentManager {
   Method used to delete a student by ID
    */
   public void deleteStudent(ArrayList<Student> students) {
-    String idToDeletedToDelete = getStudentIdToDelete(scanner);
+    System.out.print("Enter the student ID to delete: ");
+    String idToDeletedToDelete = scanner.next();
 
     if (students == null) {
       throw new NullPointerException("The list is null");
     } else {
 
-      for (Student student : students) {
-        if (student.getID().equals(idToDeletedToDelete)) {
-          students.remove(student);
-          System.out.println("\nThe student has been deleted.");
-          return;
-        }
+        if (!students.removeIf(student -> student.getID().equals(idToDeletedToDelete))) {
+        throw new StudentNotFoundException(
+            "Student with ID: " + idToDeletedToDelete + " not found.");
       }
     }
-
-    throw new StudentNotFoundException("Student with ID: " + idToDeletedToDelete + " not found.");
-  }
-
-  /*
-  Based on the user's input, return the ID that will be used to delete a student from list
-   */
-  public String getStudentIdToDelete(Scanner scanner) {
-    scanner = new Scanner(System.in);
-
-    System.out.print("Enter the student ID to delete: ");
-    String idToDelete = scanner.next();
-
-    return idToDelete;
+    System.out.println("\nThe student has been deleted.");
   }
 
   /*
@@ -188,25 +181,14 @@ public class StudentManager {
   public ArrayList<Student> retrieveAllStudentsByAge(ArrayList<Student> students) {
     ArrayList<Student> studentsWithTheSameAge = new ArrayList<>();
 
-    int ageToSearch = getStudentAge(scanner);
+    System.out.print("Enter age to search: ");
+    int ageToSearch = scanner.nextInt();
     for (Student student : students) {
       if (calculateAge(2025, student.getDateOfBirth()) == ageToSearch) {
         studentsWithTheSameAge.add(student);
       }
     }
     return studentsWithTheSameAge;
-  }
-
-  /*
-  Based on the input, return the age that will be used to search in student list
-   */
-  public int getStudentAge(Scanner scanner) {
-    scanner = new Scanner(System.in);
-
-    System.out.print("Enter age to search: ");
-    int ageToSearch = scanner.nextInt();
-
-    return ageToSearch;
   }
 
   /*
